@@ -15,12 +15,18 @@ def is_preposition(token):
         return token.lower() in prepositions.read().split()
 
 
+# Should handle conjunctions that are more than a word long!
+def is_conjunction(token):
+    with open('conjunctions.txt') as conjunctions:
+        return token.lower() in conjunctions.read().split('\n')  # Needed
+
+
 def is_article(token):
     return token.lower() in ('a', 'an', 'the')
 
 
 def is_good_ending(token):
-    return not is_article(token) and not is_preposition(token)
+    return not is_article(token) and not is_preposition(token) and not is_conjunction(token)
 
 
 def is_number(token):
@@ -42,13 +48,15 @@ def remove_numbers(words):
 def make_sentence(table):
     # Get a random word from the body
     sentence = [random.choice(list(table.keys()))[0]]
-    while len(sentence) < 4 or not is_good_ending(sentence[-1]):
+    while len(sentence) < 8 or not is_good_ending(sentence[-1]):
         best_so_far = None
         for key in table.keys():
             if key[0] == sentence[-1]:
                 if (best_so_far is None) or (table[key] > best_so_far[1]):
-                    best_so_far = (key[1], table[key])
-        sentence.append(best_so_far[0])
+                    if random.random() > random.random():
+                        best_so_far = (key[1], table[key])
+        if best_so_far is not None:
+            sentence.append(best_so_far[0])
     return ' '.join(sentence)
 
 
