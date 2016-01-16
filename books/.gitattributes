@@ -1,0 +1,6 @@
+a-christmas-carol.txt filter=lfs diff=lfs merge=lfs -text
+alice-adventures-in-wonderland.txt filter=lfs diff=lfs merge=lfs -text
+finding-the-worth-while-in-the-sw.txt filter=lfs diff=lfs merge=lfs -text
+moby-dick.txt filter=lfs diff=lfs merge=lfs -text
+pride-and-prejudice.txt filter=lfs diff=lfs merge=lfs -text
+the-adventures-of-sherlock-holmes.txt filter=lfs diff=lfs merge=lfs -text
