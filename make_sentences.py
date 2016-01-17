@@ -11,22 +11,52 @@ def remove_punctuation(text):
 
 
 def is_preposition(token):
+    """
+    Returns whether or not the provided token is a preposition.
+    :param token: a single word
+    """
     with open('prepositions.txt') as prepositions:
-        return token.lower() in prepositions.read().split()
+        return token.lower() in prepositions.read().split('\n')
 
 
-# Should handle conjunctions that are more than a word long!
-def is_conjunction(token):
+def is_conjunction(sentence):
+    """
+    Returns whether or not the provided sequence of words is a conjunction.
+    :param sentence: a list of words
+    """
     with open('conjunctions.txt') as conjunctions:
-        return token.lower() in conjunctions.read().split('\n')  # Needed
+        words = ' '.join(sentence).lower()
+        return words in conjunctions.read().split('\n')
+
+
+def ends_in_conjunction(sentence):
+    """
+    Evaluates if the specified sentence ends with a conjunction.
+    :param sentence: a list of words
+    """
+    # Relies on the fact that the biggest conjunction has three words.
+    biggest_number_of_words_in_a_conjunction = 3
+    for i in range(min(len(sentence), biggest_number_of_words_in_a_conjunction)):
+        if is_conjunction(sentence[-(i + 1):]):
+            return True
+    return False
 
 
 def is_article(token):
     return token.lower() in ('a', 'an', 'the')
 
 
-def is_good_ending(token):
-    return not is_article(token) and not is_preposition(token) and not is_conjunction(token)
+def has_good_ending(sentence):
+    """
+    Evaluates whether or not the sentence has a good ending.
+    :param sentence: an iterable of words
+    """
+    last_token = sentence[-1]
+    if not is_article(last_token):
+        if not is_preposition(last_token):
+            if not ends_in_conjunction(sentence):
+                return True
+    return False
 
 
 def is_number(token):
@@ -48,7 +78,7 @@ def remove_numbers(words):
 def make_sentence(table, minimum_sentence_length=6):
     # Get a random word from the body
     sentence = [random.choice(list(table.keys()))[0]]
-    while len(sentence) < minimum_sentence_length or not is_good_ending(sentence[-1]):
+    while len(sentence) < minimum_sentence_length or not has_good_ending(sentence):
         best_so_far = None
         for key in table.keys():
             if key[0] == sentence[-1]:
