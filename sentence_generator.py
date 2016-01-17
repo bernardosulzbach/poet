@@ -83,18 +83,36 @@ def make_probability_table(unigram_count, bigram_count):
     return probability_table
 
 
+def get_next_token(word, table):
+    """
+    Based on a probability table and a word, randomly picks a word that could follow the provided word.
+
+    :param table: a probability table of bigrams
+    :param word: a unigram
+    """
+    choices = {}
+    for bigram, probability in table.items():
+        if word == bigram[0]:
+            choices[bigram[1]] = probability
+    if len(choices) == 0:
+        return "<IMPOSSIBLE>"
+    else:
+        words = list(choices.keys())
+        values = list(choices.values())
+        value_sum = sum(values)
+        magic_number = random.random() * value_sum
+        chosen_word_index = -1
+        while magic_number > 0:
+            chosen_word_index += 1
+            magic_number -= values[chosen_word_index]
+        return words[chosen_word_index]
+
+
 def make_sentence(table, minimum_sentence_length=6):
     # Get a random word from the body
     sentence = [random.choice(list(table.keys()))[0]]
     while len(sentence) < minimum_sentence_length or not has_good_ending(sentence):
-        best_so_far = None
-        for key in table.keys():
-            if key[0] == sentence[-1]:
-                if (best_so_far is None) or (table[key] > best_so_far[1]):
-                    if random.random() > random.random():
-                        best_so_far = (key[1], table[key])
-        if best_so_far is not None:
-            sentence.append(best_so_far[0])
+        sentence.append(get_next_token(sentence[-1], table))
     return ' '.join(sentence)
 
 
