@@ -1,12 +1,16 @@
 # Poet
 
-An open-source poem generator.
+An open-source (BSD 2-Clause) Python 3 poem generator.
 
-Run
+## Usage
 
-    $ python3 prepare.py
+You need to have Git LFS installed in order to work with this project.
 
-Then
+Run the data processor once
+
+    $ python3 data_processor.py
+
+Then run the sentence generator
 
     $ python3 sentence_generator.py
 
