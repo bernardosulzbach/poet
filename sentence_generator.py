@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import random
-import string
+import re
 from collections import defaultdict
 
 preposition_list = open('prepositions.txt').read().split('\n')
@@ -9,8 +9,7 @@ conjunction_list = open('conjunctions.txt').read().split('\n')
 
 
 def remove_punctuation(text):
-    table = str.maketrans(string.punctuation, ' ' * len(string.punctuation))
-    return text.translate(table)
+    return re.sub("[^\w]+'|'[^\w]+|[^\w']+", " ", text)
 
 
 def is_preposition(token):
