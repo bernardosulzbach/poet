@@ -8,6 +8,7 @@ preposition_list = open('prepositions.txt').read().split('\n')
 conjunction_list = open('conjunctions.txt').read().split('\n')
 
 
+# Improvement: do not keep a bi-gram if the words are separated by a period.
 def remove_punctuation(text):
     return re.sub("[^\w]+'|'[^\w]+|[^\w']+", " ", text)
 
@@ -75,6 +76,13 @@ def remove_numbers(words):
     return result
 
 
+def make_probability_table(unigram_count, bigram_count):
+    probability_table = dict(bigram_count)
+    for key in probability_table:
+        probability_table[key] /= unigram_count[key[0]]
+    return probability_table
+
+
 def make_sentence(table, minimum_sentence_length=6):
     # Get a random word from the body
     sentence = [random.choice(list(table.keys()))[0]]
@@ -97,11 +105,14 @@ def main():
         text = remove_punctuation(text)
         words = text.split()
         words = remove_numbers(words)
-        table = defaultdict(lambda: 0)
+        unigram_table = defaultdict(lambda: 0)
+        bigram_table = defaultdict(lambda: 0)
         for i in range(len(words) - 1):
-            table[tuple(words[i:i + 2])] += 1
+            unigram_table[words[i]] += 1
+            bigram_table[tuple(words[i:i + 2])] += 1
+        probability_table = make_probability_table(unigram_table, bigram_table)
         for i in range(10):
-            print(make_sentence(table))
+            print(make_sentence(probability_table))
 
 
 if __name__ == '__main__':
