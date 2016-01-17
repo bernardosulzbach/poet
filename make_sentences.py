@@ -45,10 +45,10 @@ def remove_numbers(words):
     return result
 
 
-def make_sentence(table):
+def make_sentence(table, minimum_sentence_length=6):
     # Get a random word from the body
     sentence = [random.choice(list(table.keys()))[0]]
-    while len(sentence) < 8 or not is_good_ending(sentence[-1]):
+    while len(sentence) < minimum_sentence_length or not is_good_ending(sentence[-1]):
         best_so_far = None
         for key in table.keys():
             if key[0] == sentence[-1]:
