@@ -4,6 +4,9 @@ import random
 import string
 from collections import defaultdict
 
+preposition_list = open('prepositions.txt').read().split('\n')
+conjunction_list = open('conjunctions.txt').read().split('\n')
+
 
 def remove_punctuation(text):
     table = str.maketrans(string.punctuation, ' ' * len(string.punctuation))
@@ -15,8 +18,7 @@ def is_preposition(token):
     Returns whether or not the provided token is a preposition.
     :param token: a single word
     """
-    with open('prepositions.txt') as prepositions:
-        return token.lower() in prepositions.read().split('\n')
+    return token.lower() in preposition_list
 
 
 def is_conjunction(sentence):
@@ -24,9 +26,8 @@ def is_conjunction(sentence):
     Returns whether or not the provided sequence of words is a conjunction.
     :param sentence: a list of words
     """
-    with open('conjunctions.txt') as conjunctions:
-        words = ' '.join(sentence).lower()
-        return words in conjunctions.read().split('\n')
+    words = ' '.join(sentence).lower()
+    return words in conjunction_list
 
 
 def ends_in_conjunction(sentence):
